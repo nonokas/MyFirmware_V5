@@ -4,6 +4,7 @@
 #include <BasicEncoder.h>
 #include <LiquidCrystal_I2C.h>
 #include <AccelStepper.h>
+
 //Thermistor needed libraries
 #include <thermistor.h>  //Download it here: https://electronoobs.com/eng_arduino_thermistor.php
 
@@ -101,7 +102,7 @@ int Get_Speed() {
 }
 
 // Encoder related functions
-void pciSetup(byte pin)  // Setup pin change interupt on pin
+void pciSetup(byte pin)  // Setup pin change interrupt on pin
 {
   *digitalPinToPCMSK(pin) |= bit(digitalPinToPCMSKbit(pin));  // enable pin
   PCIFR |= bit(digitalPinToPCICRbit(pin));                    // clear outstanding interrupt
