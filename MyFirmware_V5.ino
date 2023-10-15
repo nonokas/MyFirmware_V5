@@ -22,8 +22,8 @@ int temp_set  = A2;                // Pin to read temperature setpoint
 
 int but1 = 7;
 int but2 = 10;    
-int but3 = 11;    // Diverged to A1 for speed_pot (input from S_pot)
-int sw = 12;      // Used to for Heater ON/OFF
+// int but3 = 11;    // Diverged to A1 for speed_pot (input from Speed_pot)
+int sw = 12;        // Used to for Heater ON/OFF
 
 int EN = 2; 
 int STEP = 3;
@@ -37,10 +37,8 @@ const int8_t OUTB = 9;
 
 volatile int curCount = 0;
 
-
-
 // Variables
-float set_temperature = 0;            //Default temperature setpoint. Leave it 0 and control it with rotary encoder
+float set_temperature = 0;      //Default temperature setpoint. Leave it 0 and control it with rotary encoder
 float initial_temperature = 100;
 float max_temperature = 250;
 float temperature_read = 0.0;
@@ -93,10 +91,10 @@ float  PID_output= 0;
 //  Read potentiometer
 int Get_Speed() {
   int Read = 0;
-  for(int i = 0; i<10 ;i++)
+  for(int i = 0; i<10 ;i++)         // Get 10 readings to average
       Read += analogRead(speed_pot);
   Read /= 10 ;
-  Serial.println(Read);
+  // Serial.println(Read); // used for debug
   return map(Read,0,1023,min_speed,max_speed);
   
 }
@@ -145,7 +143,7 @@ void setup() {
 
   //############################################################################################################
   // This sets a Timer Interrupt in TIMER1 at 8kHz
-  //This is essential to drive the stepper motor. It must be pulsed whenever a step is due for the selected speed.
+  //This is essential to drive the stepper motor. It will be pulsed whenever a step is due for the selected speed.
   // ############################################################################################################
 
   cli() ;                             // Clear all interrupts
@@ -215,7 +213,7 @@ void loop() {
     //stepper1.runSpeed();
   }
   else {
-    digitalWrite(EN, HIGH);    //We deactivate stepper driver
+    digitalWrite(EN, HIGH);    //Deactivate stepper driver
     digitalWrite(LED, LOW);
     rotating_speed = 0;
     stepper1.setSpeed(rotating_speed);
@@ -245,7 +243,6 @@ void loop() {
     temperature_read = therm1.analog2temp(); // read temperature
 
     PID_error = set_temperature - temperature_read + 6 ;  
-    
     Time = millis();                      // actual time read
     elapsedTime = (Time - timePrev) / 1000 ;   // conversion to seconds
   
@@ -253,11 +250,9 @@ void loop() {
    
     // Proportional contribution
     PID_p  = PID_p +  kp * (PID_error - previous_error);
-
     //  Integral contribution   
     PID_i = ki * PID_error * elapsedTime;
-
-    // PI output (averaging the last 3 values)m,m
+    // PI output (averaging the last 3 values)
     PID_output =  PID_p + PID_i;   
     // Thermal Load compensation
     PID_output +=  5; 
@@ -276,7 +271,6 @@ void loop() {
     if(PID_output < 0){
       PID_output = 0;
     }
-   
     if(PID_output > max_PWM){
       PID_output = max_PWM;
     }
