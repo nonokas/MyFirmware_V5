@@ -10,6 +10,9 @@
 
 LiquidCrystal_I2C lcd(0x27,16,2);  //sometimes the adress is not 0x3f. Change to 0x27 if it dosn't work.
 
+// Define a stepper and the pins it will use
+AccelStepper stepper1(1, STEP, DIR); // (Type of driver: with 2 pins, STEP, DIR)
+
         
 thermistor therm1(A0,1);          //Connect thermistor on A0, 1 represents TEMP_SENSOR_0 ( configuration.h for more)
 
@@ -56,11 +59,10 @@ int max_speed = 2000;     // In the accellstep lib this is the max frequency
 int min_speed = 0;       // The actual speed 
 bool but1_state = true;
 bool activate_stepper = true;
-int rotating_speed = 0;
-int pot_read = 0;
+float rotating_speed = 0;
+float pot_read = 0;
 
-// Define a stepper and the pins it will use
-AccelStepper stepper1(1, STEP, DIR); // (Type of driver: with 2 pins, STEP, DIR)
+
 
 //######################## ENCODER #################################
 // Block for the Encoder and interrupts
@@ -89,7 +91,7 @@ float  PID_output= 0;
 
 // #############  Auxiliary functions ###############
 //  Read potentiometer
-int Get_Speed() {
+float Get_Speed() {
   int Read = 0;
   for(int i = 0; i<10 ;i++)         // Get 10 readings to average
       Read += analogRead(speed_pot);
@@ -137,7 +139,7 @@ void setup() {
   stepper1.setMaxSpeed(max_speed); 
   digitalWrite(LED, LOW);
   digitalWrite(DIR,LOW); // Rotate clocwise
-  digitalWrite(EN, HIGH); // Disable Stepper
+  // digitalWrite(EN, HIGH); // Disable Stepper
   pinMode(PWM_pin,OUTPUT);
   Time = millis();
 
