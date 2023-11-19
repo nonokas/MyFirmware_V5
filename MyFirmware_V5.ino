@@ -10,9 +10,6 @@
 
 LiquidCrystal_I2C lcd(0x27,16,2);  //sometimes the adress is not 0x3f. Change to 0x27 if it dosn't work.
 
-// Define a stepper and the pins it will use
-AccelStepper stepper1(1, STEP, DIR); // (Type of driver: with 2 pins, STEP, DIR)
-
         
 thermistor therm1(A0,1);          //Connect thermistor on A0, 1 represents TEMP_SENSOR_0 ( configuration.h for more)
 
@@ -33,6 +30,9 @@ int STEP = 3;
 int DIR = 4;
 int LED = 13;
 int FAN = 6;
+
+// Define a stepper and the pins it will use
+AccelStepper stepper1(1, STEP, DIR); // (Type of driver: with 2 pins, STEP, DIR)
 
 //Rotary Encoder
 const int8_t OUTA = 8; 
@@ -130,7 +130,7 @@ void setup() {
   setup_encoders(OUTA,OUTB);
   encoder.set_reverse();
   pinMode(EN, OUTPUT);
-  digitalWrite(EN, HIGH);     //Stepper driver is disbled
+  digitalWrite(EN, HIGH);     //Stepper driver is disabled
   pinMode(LED, OUTPUT); 
   pinMode(but1, INPUT_PULLUP);
   pinMode(but2, INPUT_PULLUP);
@@ -169,8 +169,7 @@ void setup() {
 }
 
 void loop() {
-   
-   // HEATER ON/OFF
+     // HEATER ON/OFF
     if(!digitalRead(sw) && sw_state){
       sw_state = false;
       activate_heat = !activate_heat;
@@ -208,14 +207,16 @@ void loop() {
     
   if(activate_stepper){
     digitalWrite(LED, HIGH);
-    digitalWrite(EN, LOW);    //We activate stepper driver
+    digitalWrite(EN, HIGH);
+    // stepper1.enableOutputs();
+    // delay(100);
     rotating_speed = Get_Speed();
-    stepper1.setSpeed(rotating_speed);
+    stepper1.setMaxSpeed(rotating_speed);
    // stepper1.setSpeed(200);
     //stepper1.runSpeed();
   }
   else {
-    digitalWrite(EN, HIGH);    //Deactivate stepper driver
+    // digitalWrite(EN, HIGH);    //Deactivate stepper driver
     digitalWrite(LED, LOW);
     rotating_speed = 0;
     stepper1.setSpeed(rotating_speed);
