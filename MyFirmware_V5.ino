@@ -213,10 +213,10 @@ void loop() {
     //stepper1.runSpeed();
   }
   else {
-    // digitalWrite(EN, HIGH);    //Deactivate stepper driver
     digitalWrite(LED, LOW);
     digitalWrite(EN, HIGH);    //We deactivate stepper driver
-     rotating_speed = 0;
+    rotating_speed = 0;
+    pot_read = 0;
     stepper1.setSpeed(rotating_speed);
     stepper1.runSpeed();  
     // digitalWrite(FAN,LOW);
