@@ -52,12 +52,12 @@ bool  sw_state = false;
 bool  but2_state = true;
 
 //Stepper Variables
-int max_speed = 2000;     // In the accellstep lib this is the max frequency
+int max_speed = 3906;     // In the accellstep lib this is the max frequency
 int min_speed = 0;       // The actual speed 
+float rotating_speed = 0;
 bool but1_state = true;
 bool activate_stepper = true;
-int rotating_speed = 0;
-int pot_read = 0;
+float pot_read = 0;
 
 // Define a stepper and the pins it will use
 AccelStepper stepper1(1, STEP, DIR); // (Type of driver: with 2 pins, STEP, DIR)
@@ -95,7 +95,8 @@ int Get_Speed() {
       Read += analogRead(speed_pot);
   Read /= 10 ;
   // Serial.println(Read); // used for debug
-  return map(Read,0,1023,min_speed,max_speed);
+  // return map(Read,0,1023,min_speed,max_speed);
+  return Read;
   
 }
 
@@ -207,7 +208,8 @@ void loop() {
   if(activate_stepper){
     digitalWrite(LED, HIGH);
     digitalWrite(EN, LOW);    //We activate stepper driver
-    rotating_speed = Get_Speed();
+    pot_read = Get_Speed();
+    rotating_speed = 3.965 * pot_read; // Calibrated experimentally
     stepper1.setSpeed(rotating_speed);
    // stepper1.setSpeed(200);
     //stepper1.runSpeed();
@@ -297,7 +299,7 @@ void loop() {
   lcd.print(PID_output,0);
   lcd.setCursor(8,1);
   lcd.print("S:");  
-  lcd.print((float)rotating_speed * 0.0365,0); //Conversion of Hz to rpm    (Hz * 60)/ (8*200)
+  lcd.print((float) pot_read* 0.1449); //Conversion of pot to rpm 
   lcd.print(" rpm");
   delay(300); //Refresh rate + delay of LCD print  
 
