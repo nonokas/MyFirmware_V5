@@ -42,12 +42,9 @@ volatile int curCount = 0;
 
 // Variables
 float set_temperature = 0;      //Default temperature setpoint. Leave it 0 and control it with rotary encoder
-float initial_temperature = 100;
+float initial_temperature = 25;
 float max_temperature = 250;
 float temperature_read = 0.0;
-// float error_int = 0;
-// int   menu_activated=0;
-// float last_set_temperature = 0;
 int   max_PWM = 255;
 bool  activate_heat = false;
 bool  activate_fan = false;
@@ -58,15 +55,9 @@ bool  but2_state = true;
 int max_speed = 3906;     // In the accellstep lib this is the max frequency
 int min_speed = 0;       // The actual speed 
 float rotating_speed = 0;
+float pot_read = 0;
 bool but1_state = true;
 bool activate_stepper = true;
-<<<<<<< HEAD
-float rotating_speed = 0;
-float pot_read = 0;
-
-=======
-float pot_read = 0;
->>>>>>> af28a12c4ed82ca758928fca07d72a0767f6d113
 
 
 //######################## ENCODER #################################
@@ -98,9 +89,9 @@ float  PID_output= 0;
 //  Read potentiometer
 float Get_Speed() {
   int Read = 0;
-  for(int i = 0; i<10 ;i++)         // Get 10 readings to average
+  for(int i = 0; i<5 ;i++)         // Get 10 readings to average
       Read += analogRead(speed_pot);
-  Read /= 10 ;
+  Read /= 5 ;
   // Serial.println(Read); // used for debug
   // return map(Read,0,1023,min_speed,max_speed);
   return Read;
@@ -145,7 +136,6 @@ void setup() {
   stepper1.setMaxSpeed(max_speed); 
   digitalWrite(LED, LOW);
   digitalWrite(DIR,LOW); // Rotate clocwise
-  // digitalWrite(EN, HIGH); // Disable Stepper
   pinMode(PWM_pin,OUTPUT);
   Time = millis();
 
@@ -213,25 +203,20 @@ void loop() {
     
   if(activate_stepper){
     digitalWrite(LED, HIGH);
-<<<<<<< HEAD
-    digitalWrite(EN, HIGH);
+    digitalWrite(EN, LOW);  //We activate stepper driver
     // stepper1.enableOutputs();
     // delay(100);
-    rotating_speed = Get_Speed();
-    stepper1.setMaxSpeed(rotating_speed);
-=======
-    digitalWrite(EN, LOW);    //We activate stepper driver
     pot_read = Get_Speed();
-    rotating_speed = 3.965 * pot_read; // Calibrated experimentally
+    rotating_speed = 3.965 * pot_read;
     stepper1.setSpeed(rotating_speed);
->>>>>>> af28a12c4ed82ca758928fca07d72a0767f6d113
-   // stepper1.setSpeed(200);
+    // stepper1.setSpeed(200);
     //stepper1.runSpeed();
   }
   else {
     // digitalWrite(EN, HIGH);    //Deactivate stepper driver
     digitalWrite(LED, LOW);
-    rotating_speed = 0;
+    digitalWrite(EN, HIGH);    //We deactivate stepper driver
+     rotating_speed = 0;
     stepper1.setSpeed(rotating_speed);
     stepper1.runSpeed();  
     // digitalWrite(FAN,LOW);
@@ -313,7 +298,7 @@ void loop() {
   lcd.print(PID_output,0);
   lcd.setCursor(8,1);
   lcd.print("S:");  
-  lcd.print((float) pot_read* 0.1449); //Conversion of pot to rpm 
+  lcd.print( pot_read* 0.1449); //Conversion of pot to rpm 
   lcd.print(" rpm");
   delay(300); //Refresh rate + delay of LCD print  
 
