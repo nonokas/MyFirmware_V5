@@ -57,7 +57,7 @@ int min_speed = 0;       // The actual speed
 float rotating_speed = 0;
 float pot_read = 0;
 bool but1_state = true;
-bool activate_stepper = true;
+bool activate_stepper = false;
 
 
 //######################## ENCODER #################################
@@ -86,6 +86,7 @@ float  PID_output= 0;
 // float pi0 = 0, pi1 = 0, pi2 = 0; 
 
 // #############  Auxiliary functions ###############
+
 //  Read potentiometer
 float Get_Speed() {
   int Read = 0;
@@ -204,8 +205,6 @@ void loop() {
   if(activate_stepper){
     digitalWrite(LED, HIGH);
     digitalWrite(EN, LOW);  //We activate stepper driver
-    // stepper1.enableOutputs();
-    // delay(100);
     pot_read = Get_Speed();
     rotating_speed = 3.965 * pot_read;
     stepper1.setSpeed(rotating_speed);
@@ -298,8 +297,8 @@ void loop() {
   lcd.print(PID_output,0);
   lcd.setCursor(8,1);
   lcd.print("S:");  
-  lcd.print( pot_read* 0.1449); //Conversion of pot to rpm 
-  lcd.print(" rpm");
+  lcd.print( pot_read* 0.1449, 0); //Conversion of pot to rpm 
+  lcd.print("rpm");
   delay(300); //Refresh rate + delay of LCD print  
 
 }//Void loop end
