@@ -54,6 +54,7 @@ bool  but2_state = true;
 //Stepper Variables
 int max_speed = 3906;     // In the accellstep lib this is the max frequency
 int min_speed = 0;       // The actual speed 
+
 float rotating_speed = 0;
 float pot_read = 0;
 bool but1_state = true;
@@ -124,7 +125,7 @@ ISR(PCINT0_vect)  // pin change interrupt for D8 to D13
 
 
 void setup() { 
-  Serial.begin(115200); 
+  Serial.begin(9600); 
   setup_encoders(OUTA,OUTB);
   encoder.set_reverse();
   pinMode(EN, OUTPUT);
