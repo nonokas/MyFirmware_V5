@@ -206,7 +206,7 @@ void loop() {
     digitalWrite(LED, HIGH);
     digitalWrite(EN, LOW);  //We activate stepper driver
     pot_read = Get_Speed();
-    rotating_speed = 3.965 * pot_read;
+    rotating_speed = 3.965 * pot_read;  // Determined experimentally
     stepper1.setSpeed(rotating_speed);
     // stepper1.setSpeed(200);
     //stepper1.runSpeed();
@@ -227,9 +227,9 @@ void loop() {
      // #############  Reading Encoder
     int encoder_change = encoder.get_change();
     if (encoder_change) {
-      curCount = encoder.get_count();
+      curCount = encoder.get_count();  // Adds to the initial temperature
       if (curCount > max_temperature - initial_temperature ) {
-          curCount = max_temperature - initial_temperature;
+          curCount = max_temperature - initial_temperature; // Limit the maximum temperature
           // Serial.println(curCount); 
         }
       else
@@ -242,7 +242,7 @@ void loop() {
     timePrev = Time;    // hold time of previous loop
     temperature_read = therm1.analog2temp(); // read temperature
 
-    PID_error = set_temperature - temperature_read + 6 ;  
+    PID_error = set_temperature - temperature_read + 6 ;  // Some adjustment
     Time = millis();                      // actual time read
     elapsedTime = (Time - timePrev) / 1000 ;   // conversion to seconds
   
@@ -255,7 +255,7 @@ void loop() {
     // PI output (averaging the last 3 values)
     PID_output =  PID_p + PID_i;   
     // Thermal Load compensation
-    PID_output +=  5; 
+    PID_output +=  5; // Some adjustment
            
     Serial.print(PID_error); // Plotting
     Serial.print("   ");    
@@ -265,7 +265,7 @@ void loop() {
     Serial.print("   ");    
     Serial.println(PID_i); // Plotting
    
-    previous_error2 = previous_error;
+    // previous_error2 = previous_error;
     previous_error = PID_error;
 
     if(PID_output < 0){
@@ -284,7 +284,7 @@ void loop() {
       set_temperature = initial_temperature;
       activate_heat = false;
     }
-
+// Exhibit Data on the LCD
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Tsp:");
