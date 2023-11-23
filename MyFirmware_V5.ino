@@ -4,7 +4,7 @@
 #include <BasicEncoder.h>
 #include <LiquidCrystal_I2C.h>
 #include <AccelStepper.h>
-
+// TESTE
 //Thermistor needed libraries
 #include <thermistor.h>  //Download it here: https://electronoobs.com/eng_arduino_thermistor.php
 
