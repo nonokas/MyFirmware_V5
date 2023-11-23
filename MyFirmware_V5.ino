@@ -1,6 +1,7 @@
 //LCD config
-#include <Wire.h> 
+
 #include <Arduino.h>
+#include <Wire.h> 
 #include <BasicEncoder.h>
 #include <LiquidCrystal_I2C.h>
 #include <AccelStepper.h>
