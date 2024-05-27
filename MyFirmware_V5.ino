@@ -1,7 +1,5 @@
-//LCD config
-
 #include <Arduino.h>
-#include <Wire.h> 
+// #include <Wire.h> 
 #include <BasicEncoder.h>
 #include <LiquidCrystal_I2C.h>
 #include <AccelStepper.h>
@@ -9,6 +7,7 @@
 //Thermistor needed libraries
 #include <thermistor.h>  //Download it here: https://electronoobs.com/eng_arduino_thermistor.php
 
+//LCD config
 LiquidCrystal_I2C lcd(0x27,16,2);  //sometimes the adress is not 0x3f. Change to 0x27 if it dosn't work.
 
         
