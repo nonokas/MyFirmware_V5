@@ -176,7 +176,7 @@ void loop() {
     else 
       if (digitalRead(sw) && !sw_state) {
         sw_state = true;
-      }
+      } //end heater
 
   // Motor ON/OFF
   if(!digitalRead(but1) && but1_state){
@@ -186,7 +186,7 @@ void loop() {
   }
   else if(digitalRead(but1) && !but1_state){
     but1_state = true;
-  }
+  }//end motor
 
 // FAN ON/OFF
  if(!digitalRead(but2) && but2_state){
@@ -196,7 +196,7 @@ void loop() {
   }
   else if(digitalRead(but2) && !but2_state){
     but2_state = true;
-  }
+  }//end fan
 
  if (activate_fan) 
     digitalWrite(FAN, HIGH);
