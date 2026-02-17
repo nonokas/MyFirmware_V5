@@ -71,7 +71,9 @@ BasicEncoder encoder(OUTB, OUTA, HIGH, 2);
 	  int Tu = 32; // period in seconds Obtained by experimentation
     int Ku = 45;
 	  // Classic PID :  float kp = 0.5 * Ku; float ki = kp/(0.3 * Tu ) ; float  kd = 0.125 * kp * Tu ; 
- float kp = 0.6 * Ku; float ki = 1.2 * Ku/Tu;   // float kd = 0.075 * Ku*Tu (not implemented); 
+ float kp = 0.6 * Ku; 
+ float ki = 1.2 * Ku/Tu;   
+ // float kd = 0.075 * Ku*Tu    // (not implemented); 
 //////////////////////////////////////////////////////////
 
 // Variables for the PID controller - with IIR filter in the derivative component
@@ -222,7 +224,7 @@ void loop() {
     // digitalWrite(FAN,LOW);
   }
    // First we read the real value of temperature
-  temperature_read = therm1.analog2temp(); // read temperature
+  // temperature_read = therm1.analog2temp(); // read temperature
 
   if (activate_heat){
      // #############  Reading Encoder
@@ -241,9 +243,10 @@ void loop() {
     }
 
     timePrev = Time;    // hold time of previous loop
-    temperature_read = therm1.analog2temp(); // read temperature
-
-    PID_error = set_temperature - temperature_read + 6 ;  // Some adjustment
+    for (int i=0; i<3 ; i++)         // Get 3 readings to average>)
+        emperature_read = therm1.analog2temp(); // read temperature
+    temperature_read /= 3;
+    PID_error = set_temperature - temperature_read;  // Some adjustment
     Time = millis();                      // actual time read
     elapsedTime = (Time - timePrev) / 1000 ;   // conversion to seconds
   
